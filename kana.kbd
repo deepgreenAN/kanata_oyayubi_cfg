@@ -1,0 +1,178 @@
+(defalias
+  j-a 3
+  j-i e
+  j-u 4
+  j-e 5
+  j-o 6
+  j-ka t
+  j-ki g
+  j-ku h
+  j-ke apo
+  j-ko b
+  j-sa x
+  j-si d
+  j-su r
+  j-se p
+  j-so c
+  j-ta q
+  j-ti a
+  j-tu z
+  j-te w
+  j-to s
+  j-na u
+  j-ni i
+  j-nu 1
+  j-ne ,
+  j-no k
+  j-ha f
+  j-hi v
+  j-hu 2
+  j-he eql
+  j-ho -
+  j-ma j
+  j-mi n
+  j-mu bksl
+  j-me /
+  j-mo m
+  j-ya 7
+  j-yu 8
+  j-yo 9
+  j-ra o
+  j-ri l
+  j-ru .
+  j-re ;
+  j-ro ro
+  j-wa 0
+  j-wo S-0
+  j-nn y
+  j-ga (macro t lbrc)
+  j-gi (macro g lbrc)
+  j-gu (macro h lbrc)
+  j-ge (macro apo lbrc)
+  j-go (macro b lbrc)
+  j-za (macro x lbrc)
+  j-zi (macro d lbrc)
+  j-zu (macro r lbrc)
+  j-ze (macro p lbrc)
+  j-zo (macro c lbrc)
+  j-da (macro q lbrc)
+  j-di (macro a lbrc)
+  j-du (macro z lbrc)
+  j-de (macro w lbrc)
+  j-do (macro s lbrc)
+  j-ba (macro f lbrc)
+  j-bi (macro v lbrc)
+  j-bu (macro Digit2 lbrc)
+  j-be (macro eql lbrc)
+  j-bo (macro - lbrc)
+  j-vu (macro Digit4 lbrc)
+  j-pa (macro f rbrc)
+  j-pi (macro v rbrc)
+  j-pu (macro Digit2 rbrc)
+  j-pe (macro eql rbrc)
+  j-po (macro - rbrc)
+  j-la S-3
+  j-li S-e
+  j-lu S-4
+  j-le S-5
+  j-lo S-6
+  j-ltu S-z
+  j-lya S-7
+  j-lyu S-8
+  j-lyo S-9
+  j-lwa XX ;; かな入力では入力できない
+  j-- ¥
+  j-dot (multi lshft .) ;; 全角ドット(句点) なぜかchordでは無効となる．
+  j-com (multi lshft ,) ;; 全角カンマ(読点) なぜかchordでは無効となる．
+  j-nak (multi lshft /) ;; 全角中黒 なぜかchordでは無効となる．
+)
+
+;; すべては使われない
+(defalias
+  r-a (macro bspc Digit3)
+  r-i (macro bspc e)
+  r-u (macro bspc Digit4)
+  r-e (macro bspc Digit5)
+  r-o (macro bspc Digit6)
+  r-ka (macro bspc t)
+  r-ki (macro bspc g)
+  r-ku (macro bspc h)
+  r-ke (macro bspc apo)
+  r-ko (macro bspc b)
+  r-sa (macro bspc x)
+  r-si (macro bspc d)
+  r-su (macro bspc r)
+  r-se (macro bspc p)
+  r-so (macro bspc c)
+  r-ta (macro bspc q)
+  r-ti (macro bspc a)
+  r-tu (macro bspc z)
+  r-te (macro bspc w)
+  r-to (macro bspc s)
+  r-na (macro bspc u)
+  r-ni (macro bspc i)
+  r-nu (macro bspc Digit1)
+  r-ne (macro bspc ,)
+  r-no (macro bspc k)
+  r-ha (macro bspc f)
+  r-hi (macro bspc v)
+  r-hu (macro bspc Digit2)
+  r-he (macro bspc eql)
+  r-ho (macro bspc -)
+  r-ma (macro bspc j)
+  r-mi (macro bspc n)
+  r-mu (macro bspc bksl)
+  r-me (macro bspc /)
+  r-mo (macro bspc m)
+  r-ya (macro bspc Digit7)
+  r-yu (macro bspc Digit8)
+  r-yo (macro bspc Digit9)
+  r-ra (macro bspc o)
+  r-ri (macro bspc l)
+  r-ru (macro bspc .)
+  r-re (macro bspc ;)
+  r-ro (macro bspc ro)
+  r-wa (macro bspc Digit0)
+  r-wo (macro bspc S-0)
+  r-nn (macro bspc y)
+  r-ga (macro bspc t lbrc)
+  r-gi (macro bspc g lbrc)
+  r-gu (macro bspc h lbrc)
+  r-ge (macro bspc apo lbrc)
+  r-go (macro bspc b lbrc)
+  r-za (macro bspc x lbrc)
+  r-zi (macro bspc d lbrc)
+  r-zu (macro bspc r lbrc)
+  r-ze (macro bspc p lbrc)
+  r-zo (macro bspc c lbrc)
+  r-da (macro bspc q lbrc)
+  r-di (macro bspc a lbrc)
+  r-du (macro bspc z lbrc)
+  r-de (macro bspc eql lbrc)
+  r-do (macro bspc s lbrc)
+  r-ba (macro bspc f lbrc)
+  r-bi (macro bspc v lbrc)
+  r-bu (macro bspc Digit2 lbrc)
+  r-be (macro bspc eql lbrc)
+  r-bo (macro bspc - lbrc)
+  r-vu (macro bspc Digit4 lbrc)
+  r-pa (macro bspc f rbrc)
+  r-pi (macro bspc v rbrc)
+  r-pu (macro bspc Digit2 rbrc)
+  r-pe (macro bspc eql rbrc)
+  r-po (macro bspc - rbrc)
+  r-la (macro bspc S-3)
+  r-li (macro bspc S-e)
+  r-lu (macro bspc S-4)
+  r-le (macro bspc S-5)
+  r-lo (macro bspc S-6)
+  r-ltu (macro bspc S-z)
+  r-lya (macro bspc S-7)
+  r-lyu (macro bspc S-8)
+  r-lyo (macro bspc S-9)
+  r-lwa XX ;; かな入力では入力できない
+  r-- (macro bspc ¥)
+  r-dot (multi lshft (macro bspc .)) ;; 全角ドット(句点) なぜかchordでは無効となる．
+  r-com (multi lshft (macro bspc ,)) ;; 全角カンマ(読点) なぜかchordでは無効となる．
+  r-nak (multi lshft (macro bspc /)) ;; 全角中黒 なぜかchordでは無効となる．
+)
