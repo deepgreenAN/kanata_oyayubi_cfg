@@ -27,7 +27,7 @@
 )
 
 (deflayer hidari-shift
-  grv    _      _      _      _      _      _      _      _      _      _      _      _      _      _
+  XX     _      _      _      _      _      _      _      _      _      _      _      _      _      _
   _      @h-q   @h-w   @h-e   @h-r   @h-t   @h-y   @h-u   @h-i   @h-o   @h-p   @h-at  _      _
   _      @h-a   @h-s   @h-d   @h-f   @h-g   @h-h   @h-j   @h-k   @h-l   @h-;   _      _
   _      @h-z   @h-x   @h-c   @h-v   @h-b   @h-n   @h-m   @h-,   @h-.   @h-/   _      _
@@ -35,7 +35,7 @@
 )
 
 (deflayer migi-shift
-  grv    _      _      _      _      _      _      _      _      _      _      _      _      _      _
+  XX     _      _      _      _      _      _      _      _      _      _      _      _      _      _
   _      @m-q   @m-w   @m-e   @m-r   @m-t   @m-y   @m-u   @m-i   @m-o   @m-p   @m-at  _      _
   _      @m-a   @m-s   @m-d   @m-f   @m-g   @m-h   @m-j   @m-k   @m-l   @m-;   _      _
   _      @m-z   @m-x   @m-c   @m-v   @m-b   @m-n   @m-m   @m-,   @m-.   @m-/   _      _
@@ -43,7 +43,7 @@
 )
 
 (deflayer default
-  @usrc  _      _      _      _      _      _      _      _      _      _      _      _      _      _
+  _      _      _      _      _      _      _      _      _      _      _      _      _      _      _
   _      @usrc  @usrc  @usrc  @usrc  @usrc  @usrc  @usrc  @usrc  @usrc  @usrc  @usrc  _      _
   _      @usrc  @usrc  @usrc  @usrc  @usrc  @usrc  @usrc  @usrc  @usrc  @usrc  _      _
   _      @usrc  @usrc  @usrc  @usrc  @usrc  @usrc  @usrc  @usrc  @usrc  @usrc  _      _
@@ -56,26 +56,15 @@
   migi-shift-tap-timeout 150
   default-key-timeout 50
   default-shift-timeout 50
-  long-hold-timeout 100
-)
-
-(defvirtualkeys 
-  hdr-oyayubi-lh nop2
-  mg-oyayubi-lh nop3
 )
 
 (defalias
   on (multi (layer-switch oyayubi) grv)
   off (multi (layer-switch base) grv)
-      
-  hdr-long-hold (multi (on-release release-vkey hdr-oyayubi-lh) (macro-release-cancel $long-hold-timeout (on-press press-vkey hdr-oyayubi-lh)))
-  mg-long-hold (multi (on-release release-vkey mg-oyayubi-lh) (macro-release-cancel $long-hold-timeout (on-press press-vkey mg-oyayubi-lh)))
-  
-  hdr-hold (multi nop0 (layer-while-held hidari-shift) @hdr-long-hold)
-  mg-hold (multi nop1 (layer-while-held migi-shift) @mg-long-hold)
-  
-  hdr (tap-hold-press 0 $hidari-shift-tap-timeout spc @hdr-hold)
-  mg (tap-hold-press 0 $migi-shift-tap-timeout @off @mg-hold)
+  hdr-hold (multi nop0 (layer-while-held hidari-shift))
+  mg-hold (multi nop1 (layer-while-held migi-shift))
+  hdr (tap-hold-press $hidari-shift-tap-timeout $hidari-shift-tap-timeout spc @hdr-hold)
+  mg (tap-hold-press $migi-shift-tap-timeout $migi-shift-tap-timeout @off @mg-hold)
   
   usrc use-defsrc
   lsft (multi (layer-while-held default) lsft)
@@ -103,58 +92,55 @@
 ;; 各親指キー打鍵時のキー動作定義用
 (deftemplate hidari-shifted-key (shifted-action shift-timeout)
   (switch
-    ((and (key-timing 1 lt $shift-timeout) (input-history real spc 2))) $shifted-action break
-    (nop2) $shifted-action break
+    ((and (key-timing 1 lt $shift-timeout) (key-history nop0 1))) $shifted-action break
     () _ break
   )
 )
 
 (deftemplate migi-shifted-key (shifted-action shift-timeout)
   (switch
-    ((and (key-timing 1 lt $shift-timeout) (input-history real hnk 2))) $shifted-action break
-    (nop3) $shifted-action break
+    ((and (key-timing 1 lt $shift-timeout) (key-history nop1 1))) $shifted-action break
     () _ break
   )
 )
 
 ;; レイヤ定義
+(template-expand define-key-layer l-q @r-la XX $default-key-timeout $default-key-timeout)
+(template-expand define-key-layer l-w @r-e @r-ga $default-key-timeout $default-key-timeout)
+(template-expand define-key-layer l-e @r-ri @r-da $default-key-timeout $default-key-timeout)
+(template-expand define-key-layer l-r @r-lya @r-go $default-key-timeout $default-key-timeout)
+(template-expand define-key-layer l-t @r-re @r-za $default-key-timeout $default-key-timeout)
 
-(template-expand define-key-layer l-q (multi @r-la @hdr-long-hold) @mg-long-hold $default-key-timeout $default-key-timeout)
-(template-expand define-key-layer l-w (multi @r-e @hdr-long-hold) (multi @r-ga @mg-long-hold) $default-key-timeout $default-key-timeout)
-(template-expand define-key-layer l-e (multi @r-ri @hdr-long-hold) (multi @r-da @mg-long-hold) $default-key-timeout $default-key-timeout)
-(template-expand define-key-layer l-r (multi @r-lya @hdr-long-hold) (multi @r-go @mg-long-hold) $default-key-timeout $default-key-timeout)
-(template-expand define-key-layer l-t (multi @r-re @hdr-long-hold) (multi @r-za @mg-long-hold) $default-key-timeout $default-key-timeout)
+(template-expand define-key-layer l-y @r-pa @r-yo $default-key-timeout $default-key-timeout)
+(template-expand define-key-layer l-u @r-di @r-ni $default-key-timeout $default-key-timeout)
+(template-expand define-key-layer l-i @r-gu @r-ru $default-key-timeout $default-key-timeout)
+(template-expand define-key-layer l-o @r-du @r-ma $default-key-timeout $default-key-timeout)
+(template-expand define-key-layer l-p @r-pi @r-le $default-key-timeout $default-key-timeout)
+(template-expand define-key-layer l-at XX @r-lwa $default-key-timeout $default-key-timeout)
 
-(template-expand define-key-layer l-y (multi @r-pa @hdr-long-hold) (multi @r-yo @mg-long-hold) $default-key-timeout $default-key-timeout)
-(template-expand define-key-layer l-u (multi @r-di @hdr-long-hold) (multi @r-ni @mg-long-hold) $default-key-timeout $default-key-timeout)
-(template-expand define-key-layer l-i (multi @r-gu @hdr-long-hold) (multi @r-ru @mg-long-hold) $default-key-timeout $default-key-timeout)
-(template-expand define-key-layer l-o (multi @r-du @hdr-long-hold) (multi @r-ma @mg-long-hold) $default-key-timeout $default-key-timeout)
-(template-expand define-key-layer l-p (multi @r-pi @hdr-long-hold) (multi @r-le @mg-long-hold) $default-key-timeout $default-key-timeout)
-(template-expand define-key-layer l-at @hdr-long-hold (multi @r-lwa @mg-long-hold) $default-key-timeout $default-key-timeout)
+(template-expand define-key-layer l-a @r-wo @r-vu $default-key-timeout $default-key-timeout)
+(template-expand define-key-layer l-s @r-a @r-zi $default-key-timeout $default-key-timeout)
+(template-expand define-key-layer l-d @r-na @r-de $default-key-timeout $default-key-timeout)
+(template-expand define-key-layer l-f @r-lyu @r-ge $default-key-timeout $default-key-timeout)
+(template-expand define-key-layer l-g @r-mo @r-ze $default-key-timeout $default-key-timeout)
 
-(template-expand define-key-layer l-a (multi @r-wo @hdr-long-hold) (multi @r-vu @mg-long-hold) $default-key-timeout $default-key-timeout)
-(template-expand define-key-layer l-s (multi @r-a @hdr-long-hold) (multi @r-zi @mg-long-hold) $default-key-timeout $default-key-timeout)
-(template-expand define-key-layer l-d (multi @r-na @hdr-long-hold) (multi @r-de @mg-long-hold) $default-key-timeout $default-key-timeout)
-(template-expand define-key-layer l-f (multi @r-lyu @hdr-long-hold) (multi @r-ge @mg-long-hold) $default-key-timeout $default-key-timeout)
-(template-expand define-key-layer l-g (multi @r-mo @hdr-long-hold) (multi @r-ze @mg-long-hold) $default-key-timeout $default-key-timeout)
+(template-expand define-key-layer l-h @r-ba @r-mi $default-key-timeout $default-key-timeout)
+(template-expand define-key-layer l-j @r-do @r-o $default-key-timeout $default-key-timeout)
+(template-expand define-key-layer l-k @r-gi @r-no $default-key-timeout $default-key-timeout)
+(template-expand define-key-layer l-l @r-po @r-lyo $default-key-timeout $default-key-timeout)
+(template-expand define-key-layer l-; XX @r-ltu $default-key-timeout $default-key-timeout)
 
-(template-expand define-key-layer l-h (multi @r-ba @hdr-long-hold) (multi @r-mi @mg-long-hold) $default-key-timeout $default-key-timeout)
-(template-expand define-key-layer l-j (multi @r-do @hdr-long-hold) (multi @r-o @mg-long-hold) $default-key-timeout $default-key-timeout)
-(template-expand define-key-layer l-k (multi @r-gi @hdr-long-hold) (multi @r-no @mg-long-hold) $default-key-timeout $default-key-timeout)
-(template-expand define-key-layer l-l (multi @r-po @hdr-long-hold) (multi @r-lyo @mg-long-hold) $default-key-timeout $default-key-timeout)
-(template-expand define-key-layer l-; @hdr-long-hold (multi @r-ltu @mg-long-hold) $default-key-timeout $default-key-timeout)
+(template-expand define-key-layer l-z @r-lu XX $default-key-timeout $default-key-timeout)
+(template-expand define-key-layer l-x @r-- @r-bi $default-key-timeout $default-key-timeout)
+(template-expand define-key-layer l-c @r-ro @r-zu $default-key-timeout $default-key-timeout)
+(template-expand define-key-layer l-v @r-ya @r-bu $default-key-timeout $default-key-timeout)
+(template-expand define-key-layer l-b @r-li @r-bu $default-key-timeout $default-key-timeout)
 
-(template-expand define-key-layer l-z (multi @r-lu @hdr-long-hold) @mg-long-hold $default-key-timeout $default-key-timeout)
-(template-expand define-key-layer l-x (multi @r-- @hdr-long-hold) (multi @r-bi @mg-long-hold) $default-key-timeout $default-key-timeout)
-(template-expand define-key-layer l-c (multi @r-ro @hdr-long-hold) (multi @r-zu @mg-long-hold) $default-key-timeout $default-key-timeout)
-(template-expand define-key-layer l-v (multi @r-ya @hdr-long-hold) (multi @r-bu @mg-long-hold) $default-key-timeout $default-key-timeout)
-(template-expand define-key-layer l-b (multi @r-li @hdr-long-hold) (multi @r-bu @mg-long-hold) $default-key-timeout $default-key-timeout)
-
-(template-expand define-key-layer l-n (multi @r-pu @hdr-long-hold) (multi @r-nu @mg-long-hold) $default-key-timeout $default-key-timeout)
-(template-expand define-key-layer l-m (multi @r-zo @hdr-long-hold) (multi @r-yu @mg-long-hold) $default-key-timeout $default-key-timeout)
-(template-expand define-key-layer l-, (multi @r-pe @hdr-long-hold) (multi @r-mu @mg-long-hold) $default-key-timeout $default-key-timeout)
-(template-expand define-key-layer l-. (multi @r-bo @hdr-long-hold) (multi @r-wa @mg-long-hold) $default-key-timeout $default-key-timeout)
-(template-expand define-key-layer l-/ @hdr-long-hold (multi @r-lo @mg-long-hold) $default-key-timeout $default-key-timeout)
+(template-expand define-key-layer l-n @r-pu @r-nu $default-key-timeout $default-key-timeout)
+(template-expand define-key-layer l-m @r-zo @r-yu $default-key-timeout $default-key-timeout)
+(template-expand define-key-layer l-, @r-pe @r-mu $default-key-timeout $default-key-timeout)
+(template-expand define-key-layer l-. @r-bo @r-wa $default-key-timeout $default-key-timeout)
+(template-expand define-key-layer l-/ XX @r-lo $default-key-timeout $default-key-timeout)
 
 (defalias
   q (multi @j-dot (layer-while-held l-q))
