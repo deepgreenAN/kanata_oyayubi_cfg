@@ -27,7 +27,7 @@
 )
 
 (deflayer hidari-shift
-  XX     _      _      _      _      _      _      _      _      _      _      _      _      _      _
+  grv    _      _      _      _      _      _      _      _      _      _      _      _      _      _
   _      @h-q   @h-w   @h-e   @h-r   @h-t   @h-y   @h-u   @h-i   @h-o   @h-p   @h-at  _      _
   _      @h-a   @h-s   @h-d   @h-f   @h-g   @h-h   @h-j   @h-k   @h-l   @h-;   _      _
   _      @h-z   @h-x   @h-c   @h-v   @h-b   @h-n   @h-m   @h-,   @h-.   @h-/   _      _
@@ -35,7 +35,7 @@
 )
 
 (deflayer migi-shift
-  XX     _      _      _      _      _      _      _      _      _      _      _      _      _      _
+  grv    _      _      _      _      _      _      _      _      _      _      _      _      _      _
   _      @m-q   @m-w   @m-e   @m-r   @m-t   @m-y   @m-u   @m-i   @m-o   @m-p   @m-at  _      _
   _      @m-a   @m-s   @m-d   @m-f   @m-g   @m-h   @m-j   @m-k   @m-l   @m-;   _      _
   _      @m-z   @m-x   @m-c   @m-v   @m-b   @m-n   @m-m   @m-,   @m-.   @m-/   _      _
