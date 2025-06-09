@@ -1,0 +1,5 @@
+;; カスタムの操作
+(defalias
+  ;;example
+  md-link (macro rbrc bksl S-8 S-9 ← C-v)
+)

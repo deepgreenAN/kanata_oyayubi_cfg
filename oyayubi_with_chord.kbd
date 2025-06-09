@@ -1,5 +1,6 @@
 (include roman.kbd) ;; ローマ字入力の場合
 ;;(include kana.kbd) ;; かな入力の場合
+(include custom.kbd) ;; カスタムの操作
 
 (defsrc
   grv    1      2      3      4      5      6      7      8      9      0      -      eql    ¥      bspc
@@ -15,15 +16,15 @@
   _      _      _      _      _      _      _      _      _      _      _      _      _      _
   bspc   _      _      _      _      _      _      _      _      _      _      _      _
   _      _      _      _      _      _      _      _      _      _      _      _      _
-  _      _      _      _      _             @on    ent    _      _      _
+  _      _      _      @muh   _             @on    ent    _      @men   _
 )
 
 (deflayer oyayubi
   @off   _      _      _      _      _      _      _      _      _      _      _      _      _      _
   _      @q     @w     @e     @r     @t     @y     @u     @i     @o     @p     @at    _      _
   bspc   @a     @s     @d     @f     @g     @h     @j     @k     @l     @;     _      _
-  @lsft  @z     @x     @c     @v     @b     @n     @m     @,     @.     @/     _      @rsft
-  @lctl  _      @lalt  _      @hdr          @mg    ent    @ralt  _      @rctl
+  @olsft @z     @x     @c     @v     @b     @n     @m     @,     @.     @/     _      @orsft
+  @olctl _      @olalt _      @hdr          @mg    ent    @oralt _      @orctl
 )
 
 (deflayer hidari-shift
@@ -48,6 +49,61 @@
   _      @usrc  @usrc  @usrc  @usrc  @usrc  @usrc  @usrc  @usrc  @usrc  @usrc  _      _
   _      @usrc  @usrc  @usrc  @usrc  @usrc  @usrc  @usrc  @usrc  @usrc  @usrc  _      _
   _      _      _      _      @usrc         @usrc  _      _      _      _
+)
+
+;; 以下カスタムレイヤ
+;; オフのときメニュー
+(deflayer custom-men
+  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX
+  XX     @men-q @men-w @men-e @men-r @men-t XX     XX     XX     XX     XX     XX     XX     XX
+  XX     @men-a @men-s @men-d @men-f @men-g XX     XX     XX     XX     XX     XX     XX
+  XX     @men-z @men-x @men-c @men-v @men-b XX     XX     XX     XX     XX     XX     XX
+  XX     XX     XX     XX     XX            XX     XX     XX     XX     XX
+)
+
+;; オフのとき無変換
+(deflayer custom-muh
+  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX
+  XX     XX     XX     XX     XX     XX     @muh-y @muh-u @muh-i @muh-o @muh-p XX     XX     XX
+  XX     XX     XX     XX     XX     XX     @muh-h @muh-j @muh-k @muh-l @muh-; XX     XX
+  XX     XX     XX     XX     XX     XX     @muh-n @muh-m @muh-, @muh-. @muh-/ XX     XX
+  XX     XX     XX     XX     XX            XX     XX     XX     XX     XX
+)
+
+;; オンのとき右シフト
+(deflayer custom-o-rshift
+  @sfsrc @sfsrc @sfsrc @sfsrc @sfsrc @sfsrc @sfsrc @sfsrc @sfsrc @sfsrc @sfsrc @sfsrc @sfsrc @sfsrc @sfsrc
+  @sfsrc @ors-q @ors-w @ors-e @ors-r @ors-t XX     XX     XX     XX     XX     @sfsrc @sfsrc @sfsrc
+  XX     @ors-a @ors-s @ors-d @ors-f @ors-g XX     XX     XX     XX     @sfsrc @sfsrc @sfsrc
+  _      @ors-z @ors-x @ors-c @ors-v @ors-b XX     XX     @sfsrc @sfsrc @sfsrc @sfsrc _
+  @sfsrc @sfsrc @sfsrc @sfsrc @sfsrc        @sfsrc @sfsrc @sfsrc @sfsrc @sfsrc
+)
+
+;; オンのとき左シフト
+(deflayer custom-o-lshift
+  @sfsrc @sfsrc @sfsrc @sfsrc @sfsrc @sfsrc @sfsrc @sfsrc @sfsrc @sfsrc @sfsrc @sfsrc @sfsrc @sfsrc @sfsrc
+  @sfsrc XX     XX     XX     XX     XX     @ols-y @ols-u @ols-i @ols-o @ols-p @sfsrc @sfsrc @sfsrc
+  XX     XX     XX     XX     XX     XX     @ols-h @ols-j @ols-k @ols-l @sfsrc @sfsrc @sfsrc
+  _      XX     XX     XX     XX     XX     @ols-n @ols-m @sfsrc @sfsrc @sfsrc @sfsrc _
+  @sfsrc @sfsrc @sfsrc @sfsrc @sfsrc        @sfsrc @sfsrc @sfsrc @sfsrc @sfsrc
+)
+
+;; オンのとき右オルト
+(deflayer custom-o-ralt
+  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX
+  XX     @ora-q @ora-w @ora-e @ora-r @ora-t XX     XX     XX     XX     XX     XX     XX     XX
+  XX     @ora-a @ora-s @ora-d @ora-f @ora-g XX     XX     XX     XX     XX     XX     XX
+  XX     @ora-z @ora-x @ora-c @ora-v @ora-b XX     XX     XX     XX     XX     XX     XX
+  XX     XX     XX     XX     XX            XX     XX     XX     XX     XX
+)
+
+;; オンのとき左オルト
+(deflayer custom-o-lalt
+  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX
+  XX     XX     XX     XX     XX     XX     @ola-y @ola-u @ola-i @ola-o @ola-p XX     XX     XX
+  XX     XX     XX     XX     XX     XX     @ola-h @ola-j @ola-k @ola-l @ola-; XX     XX
+  XX     XX     XX     XX     XX     XX     @ola-n @ola-m @ola-, @ola-. @ola-/ XX     XX
+  XX     XX     XX     XX     XX            XX     XX     XX     XX     XX
 )
 
 ;; 変更可能な変数
@@ -77,13 +133,21 @@
   hdr (tap-hold-press 0 $hidari-shift-tap-timeout spc @hdr-hold)
   mg (tap-hold-press 0 $migi-shift-tap-timeout @off @mg-hold)
   
+  
   usrc use-defsrc
-  lsft (multi (layer-while-held default) lsft)
-  rsft (multi (layer-while-held default) rsft)
-  lctl (multi (layer-while-held default) lctl)
-  rctl (multi (layer-while-held default) rctl)
-  lalt (multi (layer-while-held default) lalt)
-  ralt (multi (layer-while-held default) ralt)
+  olctl (multi (layer-while-held default) lctl)
+  orctl (multi (layer-while-held default) rctl)
+  
+  ;; カスタムレイヤ
+  sfsrc (multi lsft use-defsrc)
+
+  men (layer-while-held custom-men)
+  muh (layer-while-held custom-muh)
+
+  olsft (layer-while-held custom-o-lshift)
+  orsft (layer-while-held custom-o-rshift)
+  olalt (layer-while-held custom-o-lalt)
+  oralt (layer-while-held custom-o-ralt)
 )
 
 ;; レイヤ定義用
@@ -116,6 +180,7 @@
     () _ break
   )
 )
+
 
 ;; レイヤ定義
 
@@ -277,5 +342,129 @@
 
 (defcfg
   process-unmapped-keys yes
+)
+
+;; 以下カスタムレイヤ
+
+;; オフのときメニュー
+(defalias
+  men-q XX
+  men-w ↑
+  men-e XX
+  men-r XX
+  men-t XX
+  
+  men-a ←
+  men-s ↓
+  men-d →
+  men-f XX
+  men-g XX
+  
+  men-z XX
+  men-x XX
+  men-c XX
+  men-v XX
+  men-b XX
+)
+
+;; オフのとき無変換
+(defalias
+  muh-y XX
+  muh-u XX
+  muh-i XX
+  muh-o XX
+  muh-p XX
+  
+  muh-h XX
+  muh-j XX
+  muh-k XX
+  muh-l XX
+  muh-; XX
+  
+  muh-n XX
+  muh-m XX
+  muh-, XX
+  muh-. XX
+  muh-/ XX
+)
+
+;; オンのとき右シフト
+(defalias
+  ors-q XX
+  ors-w ↑
+  ors-e XX
+  ors-r XX
+  ors-t XX
+  
+  ors-a ←
+  ors-s ↓
+  ors-d →
+  ors-f XX
+  ors-g XX
+  
+  ors-z XX
+  ors-x XX
+  ors-c XX
+  ors-v XX
+  ors-b XX
+)
+
+;; オンのとき左シフト
+(defalias
+  ols-y XX
+  ols-u XX
+  ols-i ↑
+  ols-o XX
+  ols-p XX
+  
+  ols-h XX
+  ols-j ←
+  ols-k ↓
+  ols-l →
+  
+  ols-n XX
+  ols-m XX
+)
+
+;; オンのとき右オルト
+(defalias
+  ora-q XX
+  ora-w XX
+  ora-e XX
+  ora-r XX
+  ora-t XX
+  
+  ora-a XX
+  ora-s XX
+  ora-d XX
+  ora-f XX
+  ora-g XX
+  
+  ora-z XX
+  ora-x XX
+  ora-c XX
+  ora-v XX
+  ora-b XX
+)
+
+;; オンのとき左オルト
+(defalias
+  ola-y XX
+  ola-u XX
+  ola-i XX
+  ola-o XX
+  ola-p XX
+  
+  ola-h XX
+  ola-j XX
+  ola-k XX
+  ola-l XX
+  ola-; XX
+  
+  ola-n XX
+  ola-m XX
+  ola-, XX
+  ola-. XX
+  ola-/ XX
 )
 

@@ -6,7 +6,7 @@
   tab    q      w      e      r      t      y      u      i      o      p      lbrc   rbrc   ent
   caps   a      s      d      f      g      h      j      k      l      ;      apo    bksl
   lsft   z      x      c      v      b      n      m      ,      .      /      ro     rsft
-  lctl   lmet   lalt   mhnk   spc           hnk    kana   ralt   rmet   rctl
+  lctl   lmet   lalt   mhnk   spc           hnk    kana   ralt   menu   rctl
 )
 
 ;; base layer
