@@ -1,9 +1,9 @@
 (defalias
-  j-a a
-  j-i i
-  j-u u
-  j-e e
-  j-o o
+  j-a (macro a)
+  j-i (macro i)
+  j-u (macro u)
+  j-e (macro e)
+  j-o (macro o)
   j-ka (macro k a)
   j-ki (macro k i)
   j-ku (macro k u)
@@ -81,10 +81,10 @@
   j-lyu (macro l y u)
   j-lyo (macro l y o)
   j-lwa (macro l w a)
-  j-- -
-  j-dot . ;; 全角ドット(句点)
-  j-com , ;; 全角カンマ(読点)
-  j-nak / ;; 全角中黒
+  j-- (macro -)
+  j-dot (macro .) ;; 全角ドット(句点)
+  j-com (macro ,) ;; 全角カンマ(読点)
+  j-nak (macro /) ;; 全角中黒
 )
 
 ;; すべては使われない

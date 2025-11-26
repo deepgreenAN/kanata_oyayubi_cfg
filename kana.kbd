@@ -1,50 +1,63 @@
 (defalias
-  j-a 3
-  j-i e
-  j-u 4
-  j-e 5
-  j-o 6
-  j-ka t
-  j-ki g
-  j-ku h
-  j-ke apo
-  j-ko b
-  j-sa x
-  j-si d
-  j-su r
-  j-se p
-  j-so c
-  j-ta q
-  j-ti a
-  j-tu z
-  j-te w
-  j-to s
-  j-na u
-  j-ni i
-  j-nu 1
-  j-ne ,
-  j-no k
-  j-ha f
-  j-hi v
-  j-hu 2
-  j-he eql
-  j-ho -
-  j-ma j
-  j-mi n
-  j-mu bksl
-  j-me /
-  j-mo m
-  j-ya 7
-  j-yu 8
-  j-yo 9
-  j-ra o
-  j-ri l
-  j-ru .
-  j-re ;
-  j-ro ro
-  j-wa 0
-  j-wo S-0
-  j-nn y
+  0 0
+  1 1
+  2 2
+  3 3
+  4 4
+  5 5
+  6 6
+  7 7
+  8 8
+  9 9
+);; マクロ内で数字キーを使うため
+
+(defalias
+  j-a (macro @3)
+  j-i (macro e)
+  j-u (macro @4)
+  j-e (macro @5)
+  j-o (macro @6)
+  j-ka (macro t)
+  j-ki (macro g)
+  j-ku (macro h)
+  j-ke (macro apo)
+  j-ko (macro b)
+  j-sa (macro x)
+  j-si (macro d)
+  j-su (macro r)
+  j-se (macro p)
+  j-so (macro c)
+  j-ta (macro q)
+  j-ti (macro a)
+  j-tu (macro z)
+  j-te (macro w)
+  j-to (macro s)
+  j-na (macro u)
+  j-ni (macro i)
+  j-nu (macro @1)
+  j-ne (macro ,)
+  j-no (macro k)
+  j-ha (macro f)
+  j-hi (macro v)
+  j-hu (macro @2)
+  j-he (macro eql)
+  j-ho (macro -)
+  j-ma (macro j)
+  j-mi (macro n)
+  j-mu (macro bksl)
+  j-me (macro /)
+  j-mo (macro m)
+  j-ya (macro @7)
+  j-yu (macro @8)
+  j-yo (macro @9)
+  j-ra (macro o)
+  j-ri (macro l)
+  j-ru (macro .)
+  j-re (macro ;)
+  j-ro (macro ro)
+  j-wa (macro @0)
+  j-wo (macro S-0)
+  j-nn (macro y)
   j-ga (macro t lbrc)
   j-gi (macro g lbrc)
   j-gu (macro h lbrc)
@@ -71,17 +84,17 @@
   j-pu (macro Digit2 rbrc)
   j-pe (macro eql rbrc)
   j-po (macro - rbrc)
-  j-la S-3
-  j-li S-e
-  j-lu S-4
-  j-le S-5
-  j-lo S-6
-  j-ltu S-z
-  j-lya S-7
-  j-lyu S-8
-  j-lyo S-9
+  j-la (macro S-3)
+  j-li (macro S-e)
+  j-lu (macro S-4)
+  j-le (macro S-5)
+  j-lo (macro S-6)
+  j-ltu (macro S-z)
+  j-lya (macro S-7)
+  j-lyu (macro S-8)
+  j-lyo (macro S-9)
   j-lwa XX ;; かな入力では入力できない
-  j-- ¥
+  j-- (macro ¥)
   j-dot (multi lshft .) ;; 全角ドット(句点) なぜかchordでは無効となる．
   j-com (multi lshft ,) ;; 全角カンマ(読点) なぜかchordでは無効となる．
   j-nak (multi lshft /) ;; 全角中黒 なぜかchordでは無効となる．
