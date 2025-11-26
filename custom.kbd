@@ -1,5 +1,22 @@
 ;; カスタムの操作
 (defalias
-  ;;example
-  md-link (macro rbrc bksl S-8 S-9 ← C-v)
+  brackets (macro rbrc bksl ←) ;; []
+  parentheses (macro S-8 S-9 ←) ;; ()
+  link (macro rbrc bksl S-8 S-9 ← C-v)
+  
+
+  j-daikakko (macro rbrc bksl ent ←) ;; 「」 
+  j-chukakko (macro S-8 S-9  ent ←) ;; （）
+  link-v2 ( macro
+    (clipboard-save 0)
+    20
+    (clipboard-set "[]()")
+    100
+    C-v
+    100
+    (clipboard-restore 0)
+    ←
+    100
+    C-v
+  )
 )
