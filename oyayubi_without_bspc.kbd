@@ -1,0 +1,287 @@
+(include roman.kbd) ;; ローマ字入力の場合
+;;(include kana.kbd) ;; かな入力の場合
+;;(include unicode.kbd) ;; unicodeを直接出力
+
+(deflocalkeys-linux
+  ro 89 ;; ^1.10より
+)
+
+(defsrc
+  grv    1      2      3      4      5      6      7      8      9      0      -      eql    ¥      bspc
+  tab    q      w      e      r      t      y      u      i      o      p      lbrc   rbrc   ent
+  caps   a      s      d      f      g      h      j      k      l      ;      apo    bksl
+  lsft   z      x      c      v      b      n      m      ,      .      /      ro     rsft
+  lctl   lmet   lalt   mhnk   spc           hnk    kana   ralt   menu   rctl
+)
+
+;; ベースレイヤ
+(deflayer base
+  @onoff _      _      _      _      _      _      _      _      _      _      _      _      _      _
+  _      _      _      _      _      _      _      _      _      _      _      _      _      _
+  bspc   _      _      _      _      _      _      _      _      _      _      _      _
+  _      _      _      _      _      _      _      _      _      _      _      _      _
+  @lctl  _      _      _      _             _      ent    _      _      @rctl
+)
+
+(deflayer oyayubi-base
+  @onoff _      _      _      _      _      _      _      _      _      _      _      _      _      _
+  _      @q     @w     @e     @r     @t     @y     @u     @i     @o     @p     @at    _      _
+  bspc   @a     @s     @d     @f     @g     @h     @j     @k     @l     @;     _      _
+  @olsft @z     @x     @c     @v     @b     @n     @m     @,     @.     @/     _      @orsft
+  @olctl _      @olalt _      @hdr          @mg    ent    @oralt _      @orctl
+)
+
+(deflayer oyayubi-shift
+  grv    _      _      _      _      _      _      _      _      _      _      _      _      _      _
+  _      @o-q   @o-w   @o-e   @o-r   @o-t   @o-y   @o-u   @o-i   @o-o   @o-p   @o-at  _      _
+  _      @o-a   @o-s   @o-d   @o-f   @o-g   @o-h   @o-j   @o-k   @o-l   @o-;   _      _
+  _      @o-z   @o-x   @o-c   @o-v   @o-b   @o-n   @o-m   @o-,   @o-.   @o-/   _      _
+  _      _      _      _      @hdr          @mg    _      _      _      _
+)
+
+;; デフォルトの挙動
+(deflayermap (default)
+  _ use-defsrc
+)
+
+;; 親指シフト用のショートカット(ctl)
+(deflayermap (shortcut-ctl)
+  hnk (multi (release-key lctl) (release-key rctl) @onoff)
+  spc (multi (release-key lctl) (release-key rctl) @onoff)
+  
+  grv (multi (release-key lctl) (release-key rctl) grv)
+  caps (multi (release-key lctl) (release-key rctl) _)
+  kana (multi (release-key lctl) (release-key rctl) _)
+  
+  _ use-defsrc
+)
+
+
+;; 変更可能な変数
+(defvar
+  hidari-shift-tap-timeout 120 ;; 左親指キーを単独打鍵とみなす最大時間
+  migi-shift-tap-timeout 120 ;; 右親指キーを単独打鍵とみなす最大時間
+  long-hold-timeout 110 ;; 親指シフトレイヤにおいて親指キーをホールドしながら複数キーを打つ場合の最小ホールド時間
+  default-moji-single-timeout 150 ;; 一つの文字キーのみをホールドした場合に単独打鍵とみなす最小時間．この期間内に離した瞬間も単独打鍵とみなされる．
+  default-one-hand-timeout 70 ;; 親指キーと文字キーの片手打ちで同時打鍵とみなす時間
+  default-cross-hand-timeout 30 ;; 親指キーと文字キーを異なる手で打つ場合に同時打鍵とみなす時間
+)
+
+;; 仮想キー
+(defvirtualkeys 
+  hdr-oyayubi-lh nop2 ;; 左親指キーをロングホールドしていないことを示すフラッグ．
+  mg-oyayubi-lh nop3 ;; 右親指キーをロングホールドしていないことを示すフラッグ．
+  moji-key-output nop4 ;; 文字キーの出力をすでに行ったことを示すフラッグ．
+)
+
+(defalias
+  onoff (switch
+    ((base-layer base)) (multi (layer-switch oyayubi-base) (macro grv)) break ;;オン
+    ((base-layer oyayubi-base)) (multi (layer-switch base) (macro grv)) break ;;オフ
+    () XX break ;;何もしない
+  )
+      
+  hdr-long-hold (multi (on-press press-vkey hdr-oyayubi-lh) (macro-release-cancel $long-hold-timeout (on-press release-vkey hdr-oyayubi-lh)))
+  mg-long-hold (multi (on-press press-vkey mg-oyayubi-lh) (macro-release-cancel $long-hold-timeout (on-press release-vkey mg-oyayubi-lh)))
+  
+  hdr-hold (multi nop0 (layer-while-held oyayubi-shift) @hdr-long-hold)
+  mg-hold (multi nop1 (layer-while-held oyayubi-shift) @mg-long-hold)
+    
+  hdr (tap-hold-press 0 $hidari-shift-tap-timeout spc @hdr-hold)
+  mg (tap-hold-press 0 $migi-shift-tap-timeout hnk @mg-hold)
+  
+  ;; 親指シフトオフの時のctl
+  lctl (multi (layer-while-held shortcut-ctl) lctl)
+  rctl (multi (layer-while-held shortcut-ctl) rctl)
+  
+  ;; 親指シフトオンの時のctl
+  olctl (multi (layer-while-held shortcut-ctl) lctl)
+  orctl (multi (layer-while-held shortcut-ctl) rctl)
+  
+  ;; 親指シフトオン時のその他の修飾キー
+  olsft (multi (layer-while-held default) lsft)
+  orsft (multi (layer-while-held default) rsft)
+  olalt (multi (layer-while-held default) lalt)
+  oralt (multi (layer-while-held default) ralt)
+)
+
+(defalias
+  on-press-mko (on-press press-vkey moji-key-output)
+)
+
+;; レイヤ定義用
+(deftemplate define-key-layer (layer-name single-action hdr-action mg-action hdr-timeout mg-timeout moji-timeout)
+  (deflayermap ($layer-name)
+    spc (switch 
+      ((key-timing 1 lt $hdr-timeout )) (multi @on-press-mko $hdr-action nop0 @hdr-long-hold ) break
+      ((and (key-timing 1 lt $moji-timeout ) (not nop4))) (multi @on-press-mko $single-action @hdr) break
+      () (multi @on-press-mko @hdr) break
+    );; 左親指シフト
+    hnk (switch
+      ((key-timing 1 lt $mg-timeout )) (multi @on-press-mko $mg-action nop1 @mg-long-hold) break
+      ((and (key-timing 1 lt $moji-timeout ) (not nop4))) (multi @on-press-mko $single-action @mg) break
+      () (multi @on-press-mko @mg) break
+    );; 右親指シフト
+    _ (switch
+      ((and (key-timing 1 lt $moji-timeout ) (not nop4))) (multi $single-action _ (release-layer $layer-name)) break  ;; release-layerは高速打鍵時にtap-holdの同時待ちでクラッシュさせないため
+      () (multi _ (release-layer $layer-name)) break
+    );; その他のキー
+  )
+)
+
+;; 各文字キー打鍵時のキー動作定義用
+(deftemplate moji-key (single-action moji-timeout moji-layer-name hdr-action mg-action)
+  (tap-hold-press-timeout
+    0
+    $moji-timeout 
+    (switch ((and nop0 (not nop2))) $hdr-action break ((and nop1 (not nop3))) $mg-action break () $single-action break )
+    (multi
+      (on-press release-vkey moji-key-output)
+      (on-release release-vkey moji-key-output)
+      (multi nop5 (layer-while-held $moji-layer-name))
+    )
+    (switch ((and nop0 (not nop2))) $hdr-action break ((and nop1 (not nop3))) $mg-action break () $single-action break )
+  )
+)
+
+;; 各親指キー打鍵時のキー動作定義用
+(deftemplate oyayubi-shifted-key (hdr-action mg-action hdr-timeout mg-timeout)
+  (switch
+    ((and (key-history nop0 1) (key-timing 1 lt $hdr-timeout))) $hdr-action break
+    ((and (key-history nop1 1) (key-timing 1 lt $mg-timeout))) $mg-action break
+    ((and nop0 (not nop2))) $hdr-action break
+    ((and nop1 (not nop3))) $mg-action break
+    () _ break
+  )
+)
+
+;; レイヤ定義
+;; define-key-layer (layer-name single-action hdr-action mg-action hdr-timeout mg-timeout)       
+
+(template-expand define-key-layer l-q @j-dot @j-la XX $default-one-hand-timeout $default-cross-hand-timeout $default-moji-single-timeout)
+(template-expand define-key-layer l-w @j-ka @j-e @j-ga $default-one-hand-timeout $default-cross-hand-timeout $default-moji-single-timeout)
+(template-expand define-key-layer l-e @j-ta @j-ri @j-da $default-one-hand-timeout $default-cross-hand-timeout $default-moji-single-timeout)
+(template-expand define-key-layer l-r @j-ko @j-lya @j-go $default-one-hand-timeout $default-cross-hand-timeout $default-moji-single-timeout)
+(template-expand define-key-layer l-t @j-sa @j-re @j-za $default-one-hand-timeout $default-cross-hand-timeout $default-moji-single-timeout)
+
+(template-expand define-key-layer l-y @j-ra @j-pa @j-yo $default-cross-hand-timeout $default-one-hand-timeout $default-moji-single-timeout)
+(template-expand define-key-layer l-u @j-ti @j-di @j-ni $default-cross-hand-timeout $default-one-hand-timeout $default-moji-single-timeout)
+(template-expand define-key-layer l-i @j-ku @j-gu @j-ru $default-cross-hand-timeout $default-one-hand-timeout $default-moji-single-timeout)
+(template-expand define-key-layer l-o @j-tu @j-du @j-ma $default-cross-hand-timeout $default-one-hand-timeout $default-moji-single-timeout)
+(template-expand define-key-layer l-p @j-com @j-pi @j-le $default-cross-hand-timeout $default-one-hand-timeout $default-moji-single-timeout)
+(template-expand define-key-layer l-at @j-com XX @j-lwa $default-cross-hand-timeout $default-one-hand-timeout $default-moji-single-timeout)
+
+(template-expand define-key-layer l-a @j-u @j-wo @j-vu $default-one-hand-timeout $default-cross-hand-timeout $default-moji-single-timeout)
+(template-expand define-key-layer l-s @j-si @j-a @j-zi $default-one-hand-timeout $default-cross-hand-timeout $default-moji-single-timeout)
+(template-expand define-key-layer l-d @j-te @j-na @j-de $default-one-hand-timeout $default-cross-hand-timeout $default-moji-single-timeout)
+(template-expand define-key-layer l-f @j-ke @j-lyu @j-ge $default-one-hand-timeout $default-cross-hand-timeout $default-moji-single-timeout)
+(template-expand define-key-layer l-g @j-se @j-mo @j-ze $default-one-hand-timeout $default-cross-hand-timeout $default-moji-single-timeout)
+
+(template-expand define-key-layer l-h @j-ha @j-ba @j-mi $default-cross-hand-timeout $default-one-hand-timeout $default-moji-single-timeout)
+(template-expand define-key-layer l-j @j-to @j-do @j-o $default-cross-hand-timeout $default-one-hand-timeout $default-moji-single-timeout)
+(template-expand define-key-layer l-k @j-ki @j-gi @j-no $default-cross-hand-timeout $default-one-hand-timeout $default-moji-single-timeout)
+(template-expand define-key-layer l-l @j-i @j-po @j-lyo $default-cross-hand-timeout $default-one-hand-timeout $default-moji-single-timeout)
+(template-expand define-key-layer l-; @j-nn XX @j-ltu $default-cross-hand-timeout $default-one-hand-timeout $default-moji-single-timeout)
+
+(template-expand define-key-layer l-z @j-dot @j-lu XX $default-one-hand-timeout $default-cross-hand-timeout $default-moji-single-timeout)
+(template-expand define-key-layer l-x @j-hi @j-- @j-bi $default-one-hand-timeout $default-cross-hand-timeout $default-moji-single-timeout)
+(template-expand define-key-layer l-c @j-su @j-ro @j-zu $default-one-hand-timeout $default-cross-hand-timeout $default-moji-single-timeout)
+(template-expand define-key-layer l-v @j-hu @j-ya @j-bu $default-one-hand-timeout $default-cross-hand-timeout $default-moji-single-timeout)
+(template-expand define-key-layer l-b @j-he @j-li @j-bu $default-one-hand-timeout $default-cross-hand-timeout $default-moji-single-timeout)
+
+(template-expand define-key-layer l-n @j-me @j-pu @j-nu $default-cross-hand-timeout $default-one-hand-timeout $default-moji-single-timeout)
+(template-expand define-key-layer l-m @j-so @j-zo @j-yu $default-cross-hand-timeout $default-one-hand-timeout $default-moji-single-timeout)
+(template-expand define-key-layer l-, @j-ne @j-pe @j-mu $default-cross-hand-timeout $default-one-hand-timeout $default-moji-single-timeout)
+(template-expand define-key-layer l-. @j-ho @j-bo @j-wa $default-cross-hand-timeout $default-one-hand-timeout $default-moji-single-timeout)
+(template-expand define-key-layer l-/ @j-nak XX @j-lo $default-cross-hand-timeout $default-one-hand-timeout $default-moji-single-timeout)
+
+;; 文字キーを押した時の挙動
+;; (deftemplate moji-key (single-action moji-timeout moji-layer-name hdr-action mg-action)
+
+(defalias
+  q (template-expand moji-key @j-dot $default-moji-single-timeout l-q @j-la XX)
+  w (template-expand moji-key @j-ka $default-moji-single-timeout l-w @j-e @j-ga)
+  e (template-expand moji-key @j-ta $default-moji-single-timeout l-e @j-ri @j-da)
+  r (template-expand moji-key @j-ko $default-moji-single-timeout l-r @j-lya @j-go)
+  t (template-expand moji-key @j-sa $default-moji-single-timeout l-t @j-re @j-za)
+  
+  y (template-expand moji-key @j-ra $default-moji-single-timeout l-y @j-pa @j-yo)
+  u (template-expand moji-key @j-ti $default-moji-single-timeout l-u @j-di @j-ni)
+  i (template-expand moji-key @j-ku $default-moji-single-timeout l-i @j-gu @j-ru)
+  o (template-expand moji-key @j-tu $default-moji-single-timeout l-o @j-du @j-ma)
+  p (template-expand moji-key @j-com $default-moji-single-timeout l-p @j-pi @j-le)
+  at (template-expand moji-key @j-com $default-moji-single-timeout l-at XX @j-lwa)
+  
+  a (template-expand moji-key @j-u $default-moji-single-timeout l-a @j-wo @j-vu)
+  s (template-expand moji-key @j-si $default-moji-single-timeout l-s @j-a @j-zi)
+  d (template-expand moji-key @j-te $default-moji-single-timeout l-d @j-na @j-de)
+  f (template-expand moji-key @j-ke $default-moji-single-timeout l-f @j-lyu @j-ge)
+  g (template-expand moji-key @j-se $default-moji-single-timeout l-g @j-mo @j-ze)
+  
+  h (template-expand moji-key @j-ha $default-moji-single-timeout l-h @j-ba @j-mi)
+  j (template-expand moji-key @j-to $default-moji-single-timeout l-j @j-do @j-o)
+  k (template-expand moji-key @j-ki $default-moji-single-timeout l-k @j-gi @j-no)
+  l (template-expand moji-key @j-i $default-moji-single-timeout l-l @j-po @j-lyo)
+  ; (template-expand moji-key @j-nn $default-moji-single-timeout l-; @j-nn @j-ltu)
+  
+  z (template-expand moji-key @j-dot $default-moji-single-timeout l-z @j-lu XX)
+  x (template-expand moji-key @j-hi $default-moji-single-timeout l-x @j-- @j-bi)
+  c (template-expand moji-key @j-su $default-moji-single-timeout l-c @j-ro @j-zu)
+  v (template-expand moji-key @j-hu $default-moji-single-timeout l-v @j-ya @j-bu)
+  b (template-expand moji-key @j-he $default-moji-single-timeout l-b @j-li @j-be)
+  
+  n (template-expand moji-key @j-me $default-moji-single-timeout l-n @j-pu @j-nu)
+  m (template-expand moji-key @j-so $default-moji-single-timeout l-m @j-zo @j-yu)
+  , (template-expand moji-key @j-ne $default-moji-single-timeout l-, @j-pe @j-mu)
+  . (template-expand moji-key @j-ho $default-moji-single-timeout l-. @j-bo @j-wa)
+  / (template-expand moji-key @j-nak $default-moji-single-timeout l-/ XX @j-lo)
+)
+
+;; 親指シフト時の挙動
+;; oyayubi-shifted-key (hdr-action mg-action hdr-timeout mg-timeout)
+
+(defalias
+  o-q (template-expand oyayubi-shifted-key @j-la XX $default-one-hand-timeout $default-cross-hand-timeout)
+  o-w (template-expand oyayubi-shifted-key @j-e @j-ga $default-one-hand-timeout $default-cross-hand-timeout)
+  o-e (template-expand oyayubi-shifted-key @j-ri @j-da $default-one-hand-timeout $default-cross-hand-timeout)
+  o-r (template-expand oyayubi-shifted-key @j-lya @j-go $default-one-hand-timeout $default-cross-hand-timeout)
+  o-t (template-expand oyayubi-shifted-key @j-re @j-za $default-one-hand-timeout $default-cross-hand-timeout)
+  
+  o-y (template-expand oyayubi-shifted-key @j-pa @j-yo $default-cross-hand-timeout $default-one-hand-timeout)
+  o-u (template-expand oyayubi-shifted-key @j-di @j-ni $default-cross-hand-timeout $default-one-hand-timeout)
+  o-i (template-expand oyayubi-shifted-key @j-gu @j-ru $default-cross-hand-timeout $default-one-hand-timeout)
+  o-o (template-expand oyayubi-shifted-key @j-du @j-ma $default-cross-hand-timeout $default-one-hand-timeout)
+  o-p (template-expand oyayubi-shifted-key @j-pi @j-le $default-cross-hand-timeout $default-one-hand-timeout)
+  o-at (template-expand oyayubi-shifted-key XX @j-lwa $default-cross-hand-timeout $default-one-hand-timeout)
+  
+  o-a (template-expand oyayubi-shifted-key @j-wo @j-vu $default-one-hand-timeout $default-cross-hand-timeout)
+  o-s (template-expand oyayubi-shifted-key @j-a @j-zi $default-one-hand-timeout $default-cross-hand-timeout)
+  o-d (template-expand oyayubi-shifted-key @j-na @j-de $default-one-hand-timeout $default-cross-hand-timeout)
+  o-f (template-expand oyayubi-shifted-key @j-lyu @j-ge $default-one-hand-timeout $default-cross-hand-timeout)
+  o-g (template-expand oyayubi-shifted-key @j-mo @j-ze $default-one-hand-timeout $default-cross-hand-timeout)
+  
+  o-h (template-expand oyayubi-shifted-key @j-ba @j-mi $default-cross-hand-timeout $default-one-hand-timeout)
+  o-j (template-expand oyayubi-shifted-key @j-do @j-o $default-cross-hand-timeout $default-one-hand-timeout)
+  o-k (template-expand oyayubi-shifted-key @j-gi @j-no $default-cross-hand-timeout $default-one-hand-timeout)
+  o-l (template-expand oyayubi-shifted-key @j-po @j-lyo $default-cross-hand-timeout $default-one-hand-timeout)
+  o-; (template-expand oyayubi-shifted-key @j-nn @j-ltu $default-cross-hand-timeout $default-one-hand-timeout)
+  
+  o-z (template-expand oyayubi-shifted-key @j-lu XX $default-one-hand-timeout $default-cross-hand-timeout)
+  o-x (template-expand oyayubi-shifted-key @j-- @j-bi $default-one-hand-timeout $default-cross-hand-timeout)
+  o-c (template-expand oyayubi-shifted-key @j-ro @j-zu $default-one-hand-timeout $default-cross-hand-timeout)
+  o-v (template-expand oyayubi-shifted-key @j-ya @j-bu $default-one-hand-timeout $default-cross-hand-timeout)
+  o-b (template-expand oyayubi-shifted-key @j-li @j-be $default-one-hand-timeout $default-cross-hand-timeout)
+  
+  o-n (template-expand oyayubi-shifted-key @j-pu @j-nu $default-cross-hand-timeout $default-one-hand-timeout)
+  o-m (template-expand oyayubi-shifted-key @j-zo @j-yu $default-cross-hand-timeout $default-one-hand-timeout)
+  o-, (template-expand oyayubi-shifted-key @j-pe @j-mu $default-cross-hand-timeout $default-one-hand-timeout)
+  o-. (template-expand oyayubi-shifted-key @j-bo @j-wa $default-cross-hand-timeout $default-one-hand-timeout)
+  o-/ (template-expand oyayubi-shifted-key XX @j-lo $default-cross-hand-timeout $default-one-hand-timeout)
+)
+
+(defcfg
+  process-unmapped-keys yes
+  allow-hardware-repeat false
+  ;;log-layer-changes no
+)
+
